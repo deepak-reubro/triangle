@@ -43,74 +43,76 @@ class Database implements DatabaseDriver{
 		$dataType = '';
 		$data = array();
 
+        // Bind parameters. Types: s = string, i = integer, d = double,  b = blob 
+		foreach ($variables as $key => $variable) {
+			if(is_array($variable)){
+				foreach ($variable as $type=> $value) {
+					$dataType .= $type;
+				}
+			}else{
+				$dataType .= $key;
+			}
 
-		foreach ($variables as $value) {
-
-			$temp = $value[0];
-
-
-
-			//$typeArray[] = array_shift(explode(':', $value));
-			$dataType .=  array_shift(explode(':', $value));
-
-		//	$temp = explode(':', $temp);
-
-		//	array_shift($temp);
-
-			print_r($temp);
-			echo '<br/>';
 		}
 
+		foreach ($variables as $key => $variable) {
+			if(is_array($variable)){
+				foreach ($variable as $type=> $value) {
+					$parameters[] = $value;
+				}
+			}else{
+				$parameters[] = $variable;
+			}
+		}
 
-		print_r($dataType); exit;
-
-
-        // Bind parameters. Types: s = string, i = integer, d = double,  b = blob 
-		foreach ($variables as $type => $value) {
-
-			$dataType .= $type;
-		//	$data[] = &$value;
+        // With call_user_func_array, array params must be passed by reference 
+		for($i=0 ;$i<count($parameters); $i++){
+			$data[] = &$parameters[$i];
 		}
 
 		$data[] = &$dataType;
-
 		$dataType = array_pop($data);
 		array_unshift($data, $dataType);  
-
-		print_r($data); exit;
-
-
-
-        // With call_user_func_array, array params must be passed by reference 
-		foreach ($variables as $type => $value) {
-		//	$data[] = & $value;
-		}
-
-
 
 		call_user_func_array(array(Database::$statement, 'bind_param'), $data);
 
 		/* Execute statement */
 		if(!Database::$statement->execute()){
-			echo "Execute failed: (" . Database::$statement->errno . ") " . Database::$statement->error;
+			
+			$response = array(
+				'status' => 'error',
+				'message'=> 'MySql Error: ['.Database::$statement->errno.'] '. Database::$statement->error,
+				);
+			echo json_encode($response);
+			exit;
 		}else{
 
+			if (!($result = Database::$statement->get_result())) {
 
-			if (!($res = Database::$statement->get_result())) {
-				echo "Getting result set failed: (" . Database::$statement->errno . ") " . Database::$statement->error;
+				$response = array(
+					'status' => 'error',
+					'message'=> 'MySql Error: ['.Database::$statement->errno.'] '. Database::$statement->error,
+					);
+				echo json_encode($response);
+				exit;
 			}
 
-			for ($row_no = ($res->num_rows - 1); $row_no >= 0; $row_no--) {
-				$res->data_seek($row_no);
-				print_r($res->fetch_assoc());
-			}
-			$res->close();
+			$output = array();
 
+			for ($rowNumber = ($result->num_rows - 1); $rowNumber >= 0; $rowNumber--) {
+
+				$result->data_seek($rowNumber);
+				$output[] = $result->fetch_assoc();
+			}
+
+			$result->close();
+			if(count($output) > 1){
+				return $output;
+			}else{
+				return end($output);
+			}  
 
 		}
-
 	}
 
-
-	
 }

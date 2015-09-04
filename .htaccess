@@ -1,3 +1,5 @@
 #automatically load the bootstrap file
 
-php_value auto_prepend_file /opt/lampp/htdocs/api/core/bootstrap.php
+#php_value auto_prepend_file /opt/lampp/htdocs/api/core/bootstrap.php
+
+php_value auto_prepend_file C:\xampp\htdocs\api\triangle\core\bootstrap.php

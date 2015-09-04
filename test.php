@@ -14,17 +14,14 @@ OAuth::enable();
 //$age = '20';
 
 //Database connection
-Database::query("SELECT * FROM employees WHERE name = ? AND age = ? ");
-
-
-Database::execute(array(
-	Parameter::string('Prajina'),
+//Database::query("SELECT * FROM employees WHERE name = ? AND age = ? OR age = ?");
+/*
+$data = Database::execute(array(
+	Parameter::string('B'),
+	Parameter::int(22),
 	Parameter::int(20)
 	));
-
-
-Database::execute(array(
-	Parameter::int($age),
-	"s".'Prajina',
-	"i".20
-	));
+*/	
+Database::query("SELECT * FROM employees WHERE name = ?");
+$data = Database::execute(Parameter::string('B'));
+print_r($data);
