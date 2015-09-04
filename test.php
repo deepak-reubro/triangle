@@ -10,12 +10,21 @@ Router::accept(['GET']);
 //Basic OAuth authentication
 OAuth::enable();
 
-$name = 'A';
-$age = '20';
+//$name = ;
+//$age = '20';
+
 //Database connection
 Database::query("SELECT * FROM employees WHERE name = ? AND age = ? ");
+
+
 Database::execute(array(
-	's' => $name,
-	'i' => $age
+	Parameter::string('Prajina'),
+	Parameter::int(20)
 	));
 
+
+Database::execute(array(
+	Parameter::int($age),
+	"s".'Prajina',
+	"i".20
+	));

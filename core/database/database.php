@@ -44,14 +44,32 @@ class Database implements DatabaseDriver{
 		$data = array();
 
 
-//print_r($variables);
+		foreach ($variables as $value) {
+
+			$temp = $value[0];
+
+
+
+			//$typeArray[] = array_shift(explode(':', $value));
+			$dataType .=  array_shift(explode(':', $value));
+
+		//	$temp = explode(':', $temp);
+
+		//	array_shift($temp);
+
+			print_r($temp);
+			echo '<br/>';
+		}
+
+
+		print_r($dataType); exit;
+
 
         // Bind parameters. Types: s = string, i = integer, d = double,  b = blob 
 		foreach ($variables as $type => $value) {
 
-
 			$dataType .= $type;
-			$data[] =  &$value;
+		//	$data[] = &$value;
 		}
 
 		$data[] = &$dataType;
@@ -59,7 +77,7 @@ class Database implements DatabaseDriver{
 		$dataType = array_pop($data);
 		array_unshift($data, $dataType);  
 
-         print_r($data); exit;
+		print_r($data); exit;
 
 
 
