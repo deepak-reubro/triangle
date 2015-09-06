@@ -9,6 +9,7 @@ class Database implements DatabaseDriver{
 
 	private static $connection;
 	private static $statement;
+	private static $result;
 
 	public static function connect(){
 
@@ -107,12 +108,18 @@ class Database implements DatabaseDriver{
 
 			$result->close();
 			if(count($output) > 1){
+				Database::$result = $output;
 				return $output;
 			}else{
+				Database::$result = $output;
 				return end($output);
 			}  
 
 		}
+	}
+
+	public static function result(){
+		return Database::$result;
 	}
 
 }

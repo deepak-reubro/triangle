@@ -7,21 +7,30 @@
 // Define the accepted methods 
 Router::accept(['GET']);
 
-//Basic OAuth authentication
-OAuth::enable();
+// Basic OAuth authentication
+//OAuth::enable();
 
 //$name = ;
 //$age = '20';
 
 //Database connection
-//Database::query("SELECT * FROM employees WHERE name = ? AND age = ? OR age = ?");
-/*
-$data = Database::execute(array(
+Database::query("SELECT * 
+	FROM employees 
+	WHERE name = ? 
+	AND age = ? 
+	OR age = ?");
+
+Database::execute([
 	Parameter::string('B'),
 	Parameter::int(22),
 	Parameter::int(20)
-	));
-*/	
-Database::query("SELECT * FROM employees WHERE name = ?");
+	]);
+
+
+Response::output(Database::result());
+
+
+/*Database::query("SELECT * FROM employees WHERE name = ?");
 $data = Database::execute(Parameter::string('B'));
 print_r($data);
+*/
